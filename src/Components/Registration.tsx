@@ -54,7 +54,7 @@ export default function Registration() {
     return (
         <>
             <Paper elevation={15} sx={paperStyle}>
-                <Typography color="#fff" variant="h4">
+                <Typography color="#fff" variant="h4" textAlign="center">
                     Registration
                 </Typography>
 

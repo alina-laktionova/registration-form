@@ -1,5 +1,4 @@
 import React from 'react'
-import './App.css'
 import Registration from './Components/Registration'
 import {Box} from '@mui/material'
 
