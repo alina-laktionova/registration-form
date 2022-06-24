@@ -2,7 +2,7 @@ import {Box, Button, Paper, Typography} from '@mui/material'
 import {useState} from 'react'
 import InputField from './InputField'
 import {EMAIL_REGEX, NAME_REGEX, PWD_DIGIT_REGEX, PWD_LOWER_REGEX, PWD_UPPER_REGEX} from '../config/constants'
-import {paperStyle, signInStyle, signUpStyle} from './registrationStyles'
+import {paperStyle, signInStyle, signUpStyle} from './styles/registrationStyles'
 import {User} from '../models/User'
 import ModalWindow from './ModalWindow'
 
