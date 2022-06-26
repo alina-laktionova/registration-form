@@ -6,4 +6,5 @@ Used Technologies:
 - TypeScript 
 - React JS
 - Material UI
+- Lodash
 - Prettier

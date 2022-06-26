@@ -1,5 +1,6 @@
 import {TextField} from '@mui/material'
 import {ChangeEvent, useEffect, useState} from 'react'
+import debounce from 'lodash.debounce'
 
 type Props = {
     label: string
@@ -13,6 +14,8 @@ export default function InputField(props: Props) {
     const {label, value, setValue, validate, type} = props
     const [errMessage, setErrMessage] = useState<string>('')
 
+    const debouncedSetValue = debounce((e: ChangeEvent<HTMLInputElement>) => setValue(e.target.value), 500)
+
     useEffect(() => {
         setErrMessage(validate)
     }, [value])
@@ -21,13 +24,13 @@ export default function InputField(props: Props) {
         <>
             <TextField
                 required
-                error={value ? !!errMessage : false}
-                value={value}
-                onChange={(e: ChangeEvent<HTMLInputElement>) => setValue(e.target.value)}
+                error={!!errMessage}
+                onChange={debouncedSetValue}
                 variant="filled"
                 label={label}
-                helperText={value ? errMessage : ''}
+                helperText={errMessage}
                 type={type}
+                autoComplete="new-password"
                 sx={{
                     backgroundColor: '#fff',
                     borderRadius: '5px',

@@ -1,8 +1,8 @@
 import {Box, Button, Paper, Typography} from '@mui/material'
-import {useState} from 'react'
+import {useEffect, useState} from 'react'
 import InputField from './InputField'
 import {EMAIL_REGEX, NAME_REGEX, PWD_DIGIT_REGEX, PWD_LOWER_REGEX, PWD_UPPER_REGEX} from '../config/constants'
-import {paperStyle, signInStyle, signUpStyle} from './styles/registrationStyles'
+import {paperStyle, RedTooltip, signInStyle, signUpStyle} from './styles/registrationStyles'
 import {User} from '../models/User'
 import ModalWindow from './ModalWindow'
 
@@ -13,8 +13,12 @@ export default function Registration() {
     const [confirmPwd, setConfirmPwd] = useState<string>('')
     const [user, setUser] = useState<User | null>(null)
     const [openSuccess, setOpenSuccess] = useState<boolean>(false)
+    const [showTooltip, setShowTooltip] = useState<boolean>(false)
+    const [isDisabledBtn, setIsDisabledBtn] = useState<boolean>(true)
 
     function validateName(): string {
+        if (!name) return ''
+
         let errMessage: string = ''
         if (name.length < 2 || name.length > 20) {
             errMessage = 'should be 2-20 characters long'
@@ -25,10 +29,14 @@ export default function Registration() {
     }
 
     function validateEmail(): string {
+        if (!email) return ''
+
         return EMAIL_REGEX.test(email) ? '' : 'email should be valid'
     }
 
     function validatePassword(): string {
+        if (!password) return ''
+
         let errMessage: string = ''
         if (password.length < 8 || password.length > 20) {
             errMessage = 'should be 8-20 characters long'
@@ -43,6 +51,8 @@ export default function Registration() {
     }
 
     function validateConfirmPwd(): string {
+        if (!confirmPwd) return ''
+
         return confirmPwd === password ? '' : 'must match the first password'
     }
 
@@ -50,6 +60,19 @@ export default function Registration() {
         setUser({name: name, email: email, password: password})
         setOpenSuccess(true)
     }
+
+    useEffect(() => {
+        setIsDisabledBtn(
+            !name ||
+                !email ||
+                !password ||
+                !confirmPwd ||
+                !!validateName() ||
+                !!validateEmail() ||
+                !!validatePassword() ||
+                !!validateConfirmPwd()
+        )
+    }, [name, email, password, confirmPwd])
 
     return (
         <>
@@ -75,13 +98,29 @@ export default function Registration() {
                     type="password"
                 />
 
-                <Button
-                    variant="contained"
-                    sx={signUpStyle}
-                    onClick={saveUser}
-                    disabled={!!validateName() || !!validateEmail() || !!validatePassword() || !!validateConfirmPwd()}>
-                    Sign Up
-                </Button>
+                <RedTooltip
+                    title="Please fill in all fields for registration"
+                    arrow
+                    open={showTooltip}
+                    onClose={() => setShowTooltip(false)}
+                    sx={{
+                        '&.MuiTooltip-popper[data-popper-placement*="bottom"] .MuiTooltip-tooltip': {
+                            marginTop: '7px',
+                        },
+                    }}
+                    onOpen={() => isDisabledBtn && setShowTooltip(true)}>
+                    <span>
+                        <Button
+                            fullWidth
+                            variant="contained"
+                            sx={signUpStyle}
+                            onClick={saveUser}
+                            disabled={isDisabledBtn}>
+                            Sign Up
+                        </Button>
+                    </span>
+                </RedTooltip>
+
                 <Box display="flex" justifyContent="space-between" alignItems="center">
                     <Typography color="white">Already have an account?</Typography>
                     <Button variant="text" sx={signInStyle}>
