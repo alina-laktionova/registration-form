@@ -23,7 +23,7 @@ export default function Registration() {
         if (name.length < 2 || name.length > 20) {
             errMessage = 'should be 2-20 characters long'
         } else if (!NAME_REGEX.test(name)) {
-            errMessage = 'can only contain letters'
+            errMessage = 'can only contain English letters'
         }
         return errMessage
     }
